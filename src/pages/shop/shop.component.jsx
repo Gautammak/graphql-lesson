@@ -1,5 +1,5 @@
 import React from "react";
-import SHOP_DATA from "./shop.data";
+import SHOP_DATA from "../../redux/shop/shop.data";
 
 import CollectionPreview from "../../components/Collection-Preview /Collection-Preview.component";
 
@@ -13,18 +13,14 @@ class ShopPage extends React.Component {
   }
 
   render() {
-
-    const {collection} = this.state;
-    return (<div className="shop-page">
-
-    {
-        collection.map(({id, ...otherCollectionProps}) =>  (
-            <CollectionPreview key ={id} {...otherCollectionProps} />
-
-            ))
-
-    }
-        </div>);
+    const { collection } = this.state;
+    return (
+      <div className="shop-page">
+        {collection.map(({ id, ...otherCollectionProps }) => (
+          <CollectionPreview key={id} {...otherCollectionProps} />
+        ))}
+      </div>
+    );
   }
 }
 

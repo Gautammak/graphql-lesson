@@ -1,47 +1,39 @@
 import React from "react";
 
 import { Route } from "react-router-dom";
-import CollectionPage from "../category/collection.component";
+import CollectionPageContainer from "../collection/collection.container";
 import { connect } from "react-redux";
-import CollectionsOverview from "../../components/collection-overwiew/collections-overview.component";
-import {
-  firestore,
-  convertcollectionsSnapshotToMap,
-} from "../../firebase/firebase.utils";
 
-import { updateCollections } from "../../redux/shop/shop.action";
+import CollectionOverviewContainer from "../../components/collection-overwiew/collection-overview.container";
+import { fetchCollectionsStartAsync } from "../../redux/shop/shop.action";
 
 class ShopPage extends React.Component {
-  unsubscribeFromSnapshot = null;
-
   componentDidMount() {
-    const { updateCollections } = this.props;
-    const collectionRef = firestore.collection("collections");
-
-    this.unsubscribeFromSnapshot = collectionRef.onSnapshot(
-      async (snapshot) => {
-        const collectionsMap = convertcollectionsSnapshotToMap(snapshot);
-        updateCollections(collectionsMap);
-      }
-    );
+    const { fetchCollectionsStartAsync } = this.props;
+    fetchCollectionsStartAsync();
   }
 
   render() {
     const { match } = this.props;
+
     return (
       <div className="shop-page">
-        <Route exact path={`${match.path}`} component={CollectionsOverview} />
+        <Route
+          exact
+          path={`${match.path}`}
+          component={CollectionOverviewContainer}
+        />
         <Route
           path={`${match.path}/:collectionId`}
-          component={CollectionPage}
+          component={CollectionPageContainer}
         />
       </div>
     );
   }
 }
+
 const mapDispatchToProps = (dispatch) => ({
-  updateCollections: (collectionsMap) =>
-    dispatch(updateCollections(collectionsMap)),
+  fetchCollectionsStartAsync: () => dispatch(fetchCollectionsStartAsync()),
 });
 
 export default connect(null, mapDispatchToProps)(ShopPage);
